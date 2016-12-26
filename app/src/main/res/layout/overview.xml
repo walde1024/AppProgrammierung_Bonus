@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <bonus.de.hska.klausurbonus.customviews.VerticalTextView
+            android:layout_width="20dp"
+            android:layout_height="120dp"
+            android:background="#cfcfcf"
+            android:gravity="center_horizontal"
+            android:text="08:30"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/offers_at_eight_thirty_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+    
+</ScrollView>
