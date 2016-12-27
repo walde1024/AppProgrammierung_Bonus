@@ -38,9 +38,9 @@ public class OfferDetailActivity extends AppCompatActivity implements LoaderMana
 
     private Offer offer;
 
-    private int offerId;
-
     private Menu menu;
+
+    private int offerId;
 
     private ContentObserver favoriteContentObserver;
 
