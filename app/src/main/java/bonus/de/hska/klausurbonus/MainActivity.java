@@ -15,9 +15,8 @@ import android.support.v7.widget.RecyclerView;
 import bonus.de.hska.klausurbonus.model.domain.Offer;
 import bonus.de.hska.klausurbonus.view.offer.OnOfferCardClickListener;
 import bonus.de.hska.klausurbonus.view.persistence.DatabaseReader;
-import bonus.de.hska.klausurbonus.view.persistence.SampleDataProvider;
 import bonus.de.hska.klausurbonus.view.persistence.contract.OfferPlannerContract;
-import bonus.de.hska.klausurbonus.view.persistence.db.OfferPlannerContentProvider;
+import bonus.de.hska.klausurbonus.view.persistence.contentprovider.OfferPlannerContentProvider;
 import bonus.de.hska.klausurbonus.view.persistence.db.OfferPlannerDbHelper;
 
 public class MainActivity extends AppCompatActivity implements OnOfferCardClickListener, LoaderManager.LoaderCallbacks<Cursor> {
@@ -65,15 +64,6 @@ public class MainActivity extends AppCompatActivity implements OnOfferCardClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overview);
-
-        getLoaderManager().initLoader(EIGHT_THIRTY_LOADER, null, this);
-        getLoaderManager().initLoader(NINE_LOADER, null, this);
-        getLoaderManager().initLoader(TEN_LOADER, null, this);
-        getLoaderManager().initLoader(ELEVEN_LOADER, null, this);
-        getLoaderManager().initLoader(THIRTEEN_LOADER, null, this);
-        getLoaderManager().initLoader(FOURTEEN_LOADER, null, this);
-        getLoaderManager().initLoader(FIFTEEN_LOADER, null, this);
-        getLoaderManager().initLoader(SIXTEEN_LOADER, null, this);
 
         helper = new OfferPlannerDbHelper(this);
         db = helper.getReadableDatabase();
@@ -127,6 +117,19 @@ public class MainActivity extends AppCompatActivity implements OnOfferCardClickL
         offersAtSixteen.setAdapter(offersAtSixteenAdapter = new OfferSummaryCursorAdapter(this, this));
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getLoaderManager().restartLoader(EIGHT_THIRTY_LOADER, null, this);
+        getLoaderManager().restartLoader(NINE_LOADER, null, this);
+        getLoaderManager().restartLoader(TEN_LOADER, null, this);
+        getLoaderManager().restartLoader(ELEVEN_LOADER, null, this);
+        getLoaderManager().restartLoader(THIRTEEN_LOADER, null, this);
+        getLoaderManager().restartLoader(FOURTEEN_LOADER, null, this);
+        getLoaderManager().restartLoader(FIFTEEN_LOADER, null, this);
+        getLoaderManager().restartLoader(SIXTEEN_LOADER, null, this);
+    }
+
     private RecyclerView.LayoutManager createHorizontalLayoutManager() {
         return new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
     }
@@ -161,21 +164,21 @@ public class MainActivity extends AppCompatActivity implements OnOfferCardClickL
 
         switch (loaderIndex) {
             case EIGHT_THIRTY_LOADER:
-                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_EIGHT_THIRTY}, null);
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI_FAVORITE_FIRST), null, selection, new String[]{DatabaseReader.TIME_EIGHT_THIRTY}, null);
             case NINE_LOADER:
-                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_NINE}, null);
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI_FAVORITE_FIRST), null, selection, new String[]{DatabaseReader.TIME_NINE}, null);
             case TEN_LOADER:
-                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_TEN}, null);
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI_FAVORITE_FIRST), null, selection, new String[]{DatabaseReader.TIME_TEN}, null);
             case ELEVEN_LOADER:
-                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_ELEVEN}, null);
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI_FAVORITE_FIRST), null, selection, new String[]{DatabaseReader.TIME_ELEVEN}, null);
             case THIRTEEN_LOADER:
-                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_THIRTEEN}, null);
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI_FAVORITE_FIRST), null, selection, new String[]{DatabaseReader.TIME_THIRTEEN}, null);
             case FOURTEEN_LOADER:
-                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_FOURTEEN}, null);
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI_FAVORITE_FIRST), null, selection, new String[]{DatabaseReader.TIME_FOURTEEN}, null);
             case FIFTEEN_LOADER:
-                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_FIFTEEN}, null);
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI_FAVORITE_FIRST), null, selection, new String[]{DatabaseReader.TIME_FIFTEEN}, null);
             case SIXTEEN_LOADER:
-                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_SIXTEEN}, null);
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI_FAVORITE_FIRST), null, selection, new String[]{DatabaseReader.TIME_SIXTEEN}, null);
         }
 
         throw new IllegalArgumentException("Unsupported index");

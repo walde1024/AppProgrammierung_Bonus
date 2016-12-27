@@ -21,7 +21,7 @@
         </activity>
 
 
-        <provider android:name=".view.persistence.db.OfferPlannerContentProvider"
+        <provider android:name=".view.persistence.contentprovider.OfferPlannerContentProvider"
             android:authorities="bonus.de.hska.klausurbonus.provider"/>
     </application>
 
