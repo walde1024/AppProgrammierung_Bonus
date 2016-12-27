@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <bonus.de.hska.klausurbonus.view.customviews.VerticalTextView
+            <bonus.de.hska.klausurbonus.view.customview.VerticalTextView
                 android:layout_width="20dp"
                 android:layout_height="190dp"
                 android:background="#cfcfcf"
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <bonus.de.hska.klausurbonus.view.customviews.VerticalTextView
+            <bonus.de.hska.klausurbonus.view.customview.VerticalTextView
                 android:layout_width="20dp"
                 android:layout_height="190dp"
                 android:background="#cfcfcf"
@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <bonus.de.hska.klausurbonus.view.customviews.VerticalTextView
+            <bonus.de.hska.klausurbonus.view.customview.VerticalTextView
                 android:layout_width="20dp"
                 android:layout_height="190dp"
                 android:background="#cfcfcf"
@@ -72,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <bonus.de.hska.klausurbonus.view.customviews.VerticalTextView
+            <bonus.de.hska.klausurbonus.view.customview.VerticalTextView
                 android:layout_width="20dp"
                 android:layout_height="190dp"
                 android:background="#cfcfcf"
@@ -92,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <bonus.de.hska.klausurbonus.view.customviews.VerticalTextView
+            <bonus.de.hska.klausurbonus.view.customview.VerticalTextView
                 android:layout_width="20dp"
                 android:layout_height="190dp"
                 android:background="#cfcfcf"
@@ -127,7 +127,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <bonus.de.hska.klausurbonus.view.customviews.VerticalTextView
+            <bonus.de.hska.klausurbonus.view.customview.VerticalTextView
                 android:layout_width="20dp"
                 android:layout_height="190dp"
                 android:background="#cfcfcf"
@@ -147,7 +147,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <bonus.de.hska.klausurbonus.view.customviews.VerticalTextView
+            <bonus.de.hska.klausurbonus.view.customview.VerticalTextView
                 android:layout_width="20dp"
                 android:layout_height="190dp"
                 android:background="#cfcfcf"
@@ -167,7 +167,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <bonus.de.hska.klausurbonus.view.customviews.VerticalTextView
+            <bonus.de.hska.klausurbonus.view.customview.VerticalTextView
                 android:layout_width="20dp"
                 android:layout_height="190dp"
                 android:background="#cfcfcf"
@@ -187,7 +187,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <bonus.de.hska.klausurbonus.view.customviews.VerticalTextView
+            <bonus.de.hska.klausurbonus.view.customview.VerticalTextView
                 android:layout_width="20dp"
                 android:layout_height="190dp"
                 android:background="#cfcfcf"

@@ -1,6 +1,8 @@
 package bonus.de.hska.klausurbonus;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +12,8 @@ import java.util.ArrayList;
 
 import bonus.de.hska.klausurbonus.model.domain.Offer;
 import bonus.de.hska.klausurbonus.view.offer.OnOfferCardClickListener;
+import bonus.de.hska.klausurbonus.view.persistence.DatabaseReader;
+import bonus.de.hska.klausurbonus.view.persistence.db.OfferPlannerDbHelper;
 
 public class MainActivity extends AppCompatActivity implements OnOfferCardClickListener {
 
@@ -22,160 +26,82 @@ public class MainActivity extends AppCompatActivity implements OnOfferCardClickL
     private RecyclerView offersAtFifteen;
     private RecyclerView offersAtSixteen;
 
-    private OfferSummaryAdapter offersAtEightThirtyAdapter;
-    private OfferSummaryAdapter offersAtNineAdapter;
-    private OfferSummaryAdapter offersAtTenAdapter;
-    private OfferSummaryAdapter offersAtElevenAdaper;
-    private OfferSummaryAdapter offersAtThirteenAdapter;
-    private OfferSummaryAdapter offersAtFourteenAdapter;
-    private OfferSummaryAdapter offersAtFifteenAdapter;
-    private OfferSummaryAdapter offersAtSixteenAdapter;
+    private OfferSummaryCursorAdapter offersAtEightThirtyAdapter;
+    private OfferSummaryCursorAdapter offersAtNineAdapter;
+    private OfferSummaryCursorAdapter offersAtTenAdapter;
+    private OfferSummaryCursorAdapter offersAtElevenAdaper;
+    private OfferSummaryCursorAdapter offersAtThirteenAdapter;
+    private OfferSummaryCursorAdapter offersAtFourteenAdapter;
+    private OfferSummaryCursorAdapter offersAtFifteenAdapter;
+    private OfferSummaryCursorAdapter offersAtSixteenAdapter;
+
+    private OfferPlannerDbHelper helper;
+    private SQLiteDatabase db;
+
+    private Cursor eightThirtyCursor;
+    private Cursor nineCursor;
+    private Cursor tenCursor;
+    private Cursor elevenCursor;
+    private Cursor thirteenCursor;
+    private Cursor fourteenCursor;
+    private Cursor fifteenCursor;
+    private Cursor sixteenCursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overview);
 
+        helper = new OfferPlannerDbHelper(this);
+        db = helper.getReadableDatabase();
+
         offersAtEightThirty = (RecyclerView) findViewById(R.id.offers_at_eight_thirty_recycler);
         offersAtEightThirty.setHasFixedSize(true);
         offersAtEightThirty.setLayoutManager(this.createHorizontalLayoutManager());
-        offersAtEightThirty.setAdapter(offersAtEightThirtyAdapter = new OfferSummaryAdapter(this, this));
+        eightThirtyCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_EIGHT_THIRTY);
+        offersAtEightThirty.setAdapter(offersAtEightThirtyAdapter = new OfferSummaryCursorAdapter(this, this, eightThirtyCursor));
 
         offersAtNine = (RecyclerView) findViewById(R.id.offers_at_nine_recycler);
         offersAtNine.setHasFixedSize(true);
         offersAtNine.setLayoutManager(this.createHorizontalLayoutManager());
-        offersAtNine.setAdapter(offersAtNineAdapter = new OfferSummaryAdapter(this, this));
+        nineCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_NINE);
+        offersAtNine.setAdapter(offersAtNineAdapter = new OfferSummaryCursorAdapter(this, this, nineCursor));
 
         offersAtTen = (RecyclerView) findViewById(R.id.offers_at_ten_recycler);
         offersAtTen.setHasFixedSize(true);
         offersAtTen.setLayoutManager(this.createHorizontalLayoutManager());
-        offersAtTen.setAdapter(offersAtTenAdapter = new OfferSummaryAdapter(this, this));
+        tenCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_TEN);
+        offersAtTen.setAdapter(offersAtTenAdapter = new OfferSummaryCursorAdapter(this, this, tenCursor));
 
         offersAtEleven = (RecyclerView) findViewById(R.id.offers_at_eleven_recycler);
         offersAtEleven.setHasFixedSize(true);
         offersAtEleven.setLayoutManager(this.createHorizontalLayoutManager());
-        offersAtEleven.setAdapter(offersAtElevenAdaper = new OfferSummaryAdapter(this, this));
+        elevenCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_ELEVEN);
+        offersAtEleven.setAdapter(offersAtElevenAdaper = new OfferSummaryCursorAdapter(this, this, elevenCursor));
 
         offersAtThirteen = (RecyclerView) findViewById(R.id.offers_at_thirteen_recycler);
         offersAtThirteen.setHasFixedSize(true);
         offersAtThirteen.setLayoutManager(this.createHorizontalLayoutManager());
-        offersAtThirteen.setAdapter(offersAtThirteenAdapter = new OfferSummaryAdapter(this, this));
+        thirteenCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_THIRTEEN);
+        offersAtThirteen.setAdapter(offersAtThirteenAdapter = new OfferSummaryCursorAdapter(this, this, thirteenCursor));
 
         offersAtFourteen = (RecyclerView) findViewById(R.id.offers_at_fourteen_recycler);
         offersAtFourteen.setHasFixedSize(true);
         offersAtFourteen.setLayoutManager(this.createHorizontalLayoutManager());
-        offersAtFourteen.setAdapter(offersAtFourteenAdapter = new OfferSummaryAdapter(this, this));
+        fourteenCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_FOURTEEN);
+        offersAtFourteen.setAdapter(offersAtFourteenAdapter = new OfferSummaryCursorAdapter(this, this, fourteenCursor));
 
         offersAtFifteen = (RecyclerView) findViewById(R.id.offers_at_fifteen_recycler);
         offersAtFifteen.setHasFixedSize(true);
         offersAtFifteen.setLayoutManager(this.createHorizontalLayoutManager());
-        offersAtFifteen.setAdapter(offersAtFifteenAdapter = new OfferSummaryAdapter(this, this));
+        fifteenCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_FIFTEEN);
+        offersAtFifteen.setAdapter(offersAtFifteenAdapter = new OfferSummaryCursorAdapter(this, this, fifteenCursor));
 
         offersAtSixteen = (RecyclerView) findViewById(R.id.offers_at_sixteen_recycler);
         offersAtSixteen.setHasFixedSize(true);
+        sixteenCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_SIXTEEN);
         offersAtSixteen.setLayoutManager(this.createHorizontalLayoutManager());
-        offersAtSixteen.setAdapter(offersAtSixteenAdapter = new OfferSummaryAdapter(this, this));
-
-        setData();
-    }
-
-    private void setData() {
-        ArrayList<Offer> offersNine = new ArrayList<>();
-
-        Offer offer = new Offer("Mathematik 3", "Denken", "09:00", "143", "Herr Mustermann");
-        offersNine.add(offer);
-        offer = new Offer("Garten", "Handwerk/Kunst", "09:00", "143", "Herr Mustermann");
-        offersNine.add(offer);
-        offer = new Offer("Klavier", "Musik", "09:00", "143", "Herr Mustermann");
-        offersNine.add(offer);
-        offer = new Offer("Geschichte", "Sozialwissenschaften", "09:00", "143", "Herr Mustermann");
-        offersNine.add(offer);
-        offer = new Offer("Basketball", "Sport/Tanz", "09:00", "143", "Herr Mustermann");
-        offersNine.add(offer);
-        offer = new Offer("Physik", "Wissenschaften", "09:00", "143", "Herr Mustermann");
-        offersNine.add(offer);
-
-        offersAtNineAdapter.setData(offersNine);
-
-        ArrayList<Offer> offersEightDirty = new ArrayList<>();
-        offer = new Offer("Morgenkreise", "Sonstiges", "08:30", "143", "Herr Mustermann");
-        offersEightDirty.add(offer);
-
-        offersAtEightThirtyAdapter.setData(offersEightDirty);
-
-        ArrayList<Offer> offersTen = new ArrayList<>();
-        offer = new Offer("Band", "Musik", "10:00", "143", "Herr Mustermann");
-        offersTen.add(offer);
-        offer = new Offer("Schmuck", "Handwerk/Kunst", "10:00", "143", "Herr Mustermann");
-        offersTen.add(offer);
-        offer = new Offer("Schach", "Denken", "10:00", "143", "Herr Mustermann");
-        offersTen.add(offer);
-
-        offersAtTenAdapter.setData(offersTen);
-
-        ArrayList<Offer> offersEleven = new ArrayList<>();
-        offer = new Offer("Gemeinschaftskunde", "Sozialwissenschaften", "11:00", "143", "Herr Mustermann");
-        offersEleven.add(offer);
-        offer = new Offer("Bio II", "Wissenschaften", "11:00", "143", "Herr Mustermann");
-        offersEleven.add(offer);
-        offer = new Offer("Tanzen", "Sport/Tanz", "11:00", "143", "Herr Mustermann");
-        offersEleven.add(offer);
-
-        offersAtElevenAdaper.setData(offersEleven);
-
-        ArrayList<Offer> offersThirteen = new ArrayList<>();
-        offer = new Offer("Geographie", "Sozialwissenschaften", "13:00", "143", "Herr Mustermann");
-        offersThirteen.add(offer);
-        offer = new Offer("Mathe Werkstatt", "Denken", "13:00", "143", "Herr Mustermann");
-        offersThirteen.add(offer);
-        offer = new Offer("Sport", "Sport/Tanz", "13:00", "143", "Herr Mustermann");
-        offersThirteen.add(offer);
-        offer = new Offer("Chemie I", "Wissenschaften", "13:00", "143", "Herr Mustermann");
-        offersThirteen.add(offer);
-
-        offersAtThirteenAdapter.setData(offersThirteen);
-
-        ArrayList<Offer> offersFourteen = new ArrayList<>();
-        offer = new Offer("Schach", "Denken", "14:00", "143", "Herr Mustermann");
-        offersFourteen.add(offer);
-        offer = new Offer("Band", "Musik", "14:00", "143", "Herr Mustermann");
-        offersFourteen.add(offer);
-        offer = new Offer("Bio II", "Wissenschaften", "14:00", "143", "Herr Mustermann");
-        offersFourteen.add(offer);
-        offer = new Offer("Tanzen", "Sport/Tanz", "14:00", "143", "Herr Mustermann");
-        offersFourteen.add(offer);
-        offer = new Offer("Schmuck", "Handwerk/Kunst", "14:00", "143", "Herr Mustermann");
-        offersFourteen.add(offer);
-
-        offersAtFourteenAdapter.setData(offersFourteen);
-
-        ArrayList<Offer> offersFifteen = new ArrayList<>();
-        offer = new Offer("Chemie I", "Wissenschaften", "15:00", "143", "Herr Mustermann");
-        offersFifteen.add(offer);
-        offer = new Offer("Geographie", "Sozialwissenschaften", "15:00", "143", "Herr Mustermann");
-        offersFifteen.add(offer);
-        offer = new Offer("Mathe Werkstatt", "Denken", "15:00", "143", "Herr Mustermann");
-        offersFifteen.add(offer);
-        offer = new Offer("Sport", "Sport/Tanz", "15:00", "143", "Herr Mustermann");
-        offersFifteen.add(offer);
-
-        offersAtFifteenAdapter.setData(offersFifteen);
-
-        ArrayList<Offer> offersSixteen = new ArrayList<>();
-        offer = new Offer("Geschichte", "Sozialwissenschaften", "16:00", "143", "Herr Mustermann");
-        offersSixteen.add(offer);
-        offer = new Offer("Basketball", "Sport/Tanz", "16:00", "143", "Herr Mustermann");
-        offersSixteen.add(offer);
-        offer = new Offer("Physik", "Wissenschaften", "16:00", "143", "Herr Mustermann");
-        offersSixteen.add(offer);
-        offer = new Offer("Mathematik 3", "Denken", "16:00", "143", "Herr Mustermann");
-        offersSixteen.add(offer);
-        offer = new Offer("Garten", "Handwerk/Kunst", "16:00", "143", "Herr Mustermann");
-        offersSixteen.add(offer);
-        offer = new Offer("Klavier", "Musik", "16:00", "143", "Herr Mustermann");
-        offersSixteen.add(offer);
-
-        offersAtSixteenAdapter.setData(offersSixteen);
+        offersAtSixteen.setAdapter(offersAtSixteenAdapter = new OfferSummaryCursorAdapter(this, this, sixteenCursor));
     }
 
     private RecyclerView.LayoutManager createHorizontalLayoutManager() {
@@ -187,5 +113,22 @@ public class MainActivity extends AppCompatActivity implements OnOfferCardClickL
         Intent intent = new Intent(this, OfferDetailActivity.class);
         intent.putExtra(Offer.KEY, offer);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        eightThirtyCursor.close();
+        nineCursor.close();
+        tenCursor.close();
+        elevenCursor.close();
+        thirteenCursor.close();
+        fourteenCursor.close();
+        fifteenCursor.close();
+        sixteenCursor.close();
+
+        helper.close();
+        db.close();
     }
 }

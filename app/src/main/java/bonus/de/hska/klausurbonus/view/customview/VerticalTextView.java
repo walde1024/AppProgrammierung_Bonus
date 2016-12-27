@@ -1,4 +1,4 @@
-package bonus.de.hska.klausurbonus.view.customviews;
+package bonus.de.hska.klausurbonus.view.customview;
 
 import android.content.Context;
 import android.graphics.Canvas;
