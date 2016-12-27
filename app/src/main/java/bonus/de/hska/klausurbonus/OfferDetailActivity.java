@@ -3,12 +3,14 @@ package bonus.de.hska.klausurbonus;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -38,13 +40,14 @@ public class OfferDetailActivity extends AppCompatActivity implements LoaderMana
 
     private Offer offer;
 
-    private int offerId;
-
     private Menu menu;
+
+    private int offerId;
 
     private ContentObserver favoriteContentObserver;
 
     private boolean isFavorite;
+    private boolean thereIsOtherFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,11 +94,13 @@ public class OfferDetailActivity extends AppCompatActivity implements LoaderMana
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_favorite) {
             if (!isFavorite) {
-                ContentValues values = new ContentValues();
-                values.put(OfferPlannerContract.FavoriteOffer.COLUMN_NAME_TIME, offer.getTime());
-                values.put(OfferPlannerContract.FavoriteOffer.COLUMN_NAME_OFFER_ID, offerId);
 
-                getContentResolver().insert(Uri.parse(OfferPlannerContentProvider.FAVORITE_OFFERS_URI), values);
+                if (!thereIsOtherFavorite) {
+                    setCurrentOfferAsFavorite();
+                }
+                else {
+                    showReplaceFavoriteConfirmDialog();
+                }
             }
             else {
                 getContentResolver().delete(Uri.parse(OfferPlannerContentProvider.FAVORITE_OFFERS_URI), OfferPlannerContract.FavoriteOffer.COLUMN_NAME_TIME + " = ?", new String[] {offer.getTime()});
@@ -103,6 +108,28 @@ public class OfferDetailActivity extends AppCompatActivity implements LoaderMana
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showReplaceFavoriteConfirmDialog() {
+        new AlertDialog.Builder(this)
+            .setTitle("Favorit setzen")
+            .setMessage("Es existiert bereits ein Favorit für diese Uhrzeit.")
+            .setPositiveButton("Ersetzen", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    setCurrentOfferAsFavorite();
+                }
+            })
+            .setNegativeButton("Abbrechen", null)
+            .show();
+    }
+
+    private void setCurrentOfferAsFavorite() {
+        ContentValues values = new ContentValues();
+        values.put(OfferPlannerContract.FavoriteOffer.COLUMN_NAME_TIME, offer.getTime());
+        values.put(OfferPlannerContract.FavoriteOffer.COLUMN_NAME_OFFER_ID, offerId);
+
+        getContentResolver().insert(Uri.parse(OfferPlannerContentProvider.FAVORITE_OFFERS_URI), values);
     }
 
     @Override
@@ -142,15 +169,18 @@ public class OfferDetailActivity extends AppCompatActivity implements LoaderMana
                     int id = cursor.getInt(cursor.getColumnIndex(OfferPlannerContract.FavoriteOffer.COLUMN_NAME_OFFER_ID));
                     if (id == offerId) {
                         isFavorite = true;
+                        thereIsOtherFavorite = false;
                         item.setIcon(getDrawable(R.drawable.ic_favorite_marked));
                     }
                     else {
+                        thereIsOtherFavorite = true;
                         isFavorite = false;
                         item.setIcon(getDrawable(R.drawable.ic_favorite));
                     }
                 }
                 else {
                     isFavorite = false;
+                    thereIsOtherFavorite = false;
                     item.setIcon(getDrawable(R.drawable.ic_favorite));
                 }
                 break;
