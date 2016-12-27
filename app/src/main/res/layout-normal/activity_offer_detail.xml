@@ -6,12 +6,13 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_light">
+        android:background="@android:color/holo_blue_light"
+        android:id="@+id/offer_detail_icon_frame">
 
         <ImageView
             android:layout_width="fill_parent"
             android:layout_height="200dp"
-            android:id="@+id/imageView"
+            android:id="@+id/offer_detail_icon"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/math" />
     </FrameLayout>

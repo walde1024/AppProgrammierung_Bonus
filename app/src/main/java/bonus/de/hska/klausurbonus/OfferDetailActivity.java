@@ -2,7 +2,12 @@ package bonus.de.hska.klausurbonus;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import bonus.de.hska.klausurbonus.model.domain.Offer;
+import bonus.de.hska.klausurbonus.view.offer.OfferResources;
 
 public class OfferDetailActivity extends AppCompatActivity {
 
@@ -11,6 +16,10 @@ public class OfferDetailActivity extends AppCompatActivity {
     private TextView time;
     private TextView room;
     private TextView teacher;
+    private ImageView icon;
+    private FrameLayout iconFrame;
+
+    private Offer offer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,11 +31,17 @@ public class OfferDetailActivity extends AppCompatActivity {
         time = (TextView) findViewById(R.id.offer_detail_time);
         room = (TextView) findViewById(R.id.offer_detail_room);
         teacher = (TextView) findViewById(R.id.offer_detail_teacher);
+        icon = (ImageView) findViewById(R.id.offer_detail_icon);
+        iconFrame = (FrameLayout) findViewById(R.id.offer_detail_icon_frame);
 
-        title.setText("Rechnen");
-        category.setText("Mathematik");
-        time.setText("8:30");
-        room.setText("144");
-        teacher.setText("Herr Mustermann");
+        offer = (Offer) getIntent().getExtras().get(Offer.KEY);
+
+        title.setText(offer.getTitle());
+        category.setText(offer.getCategory());
+        time.setText(offer.getTime());
+        room.setText(offer.getRoom());
+        teacher.setText(offer.getTeacher());
+        icon.setImageDrawable(OfferResources.getIconForOffer(this, offer));
+        iconFrame.setBackgroundColor(OfferResources.getColorForOffer(offer));
     }
 }
