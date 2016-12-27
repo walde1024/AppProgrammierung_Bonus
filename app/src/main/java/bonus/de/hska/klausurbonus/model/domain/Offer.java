@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public class Offer implements Parcelable {
 
-    public static final String KEY = "offer";
+    public static final String ID_KEY = "offerId";
 
     private String title;
 

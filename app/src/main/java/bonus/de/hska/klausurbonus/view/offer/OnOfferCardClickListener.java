@@ -7,6 +7,6 @@ import bonus.de.hska.klausurbonus.model.domain.Offer;
  */
 public interface OnOfferCardClickListener {
 
-    void onClickOfferCard(Offer offer);
+    void onClickOfferCard(int offerId);
 
 }

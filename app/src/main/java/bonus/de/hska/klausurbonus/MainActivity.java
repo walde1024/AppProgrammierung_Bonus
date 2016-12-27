@@ -1,21 +1,26 @@
 package bonus.de.hska.klausurbonus;
 
+import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import java.util.ArrayList;
-
 import bonus.de.hska.klausurbonus.model.domain.Offer;
 import bonus.de.hska.klausurbonus.view.offer.OnOfferCardClickListener;
 import bonus.de.hska.klausurbonus.view.persistence.DatabaseReader;
+import bonus.de.hska.klausurbonus.view.persistence.SampleDataProvider;
+import bonus.de.hska.klausurbonus.view.persistence.contract.OfferPlannerContract;
+import bonus.de.hska.klausurbonus.view.persistence.db.OfferPlannerContentProvider;
 import bonus.de.hska.klausurbonus.view.persistence.db.OfferPlannerDbHelper;
 
-public class MainActivity extends AppCompatActivity implements OnOfferCardClickListener {
+public class MainActivity extends AppCompatActivity implements OnOfferCardClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private RecyclerView offersAtEightThirty;
     private RecyclerView offersAtNine;
@@ -47,10 +52,28 @@ public class MainActivity extends AppCompatActivity implements OnOfferCardClickL
     private Cursor fifteenCursor;
     private Cursor sixteenCursor;
 
+    private final int EIGHT_THIRTY_LOADER = 0;
+    private final int NINE_LOADER = 1;
+    private final int TEN_LOADER = 2;
+    private final int ELEVEN_LOADER = 3;
+    private final int THIRTEEN_LOADER = 4;
+    private final int FOURTEEN_LOADER = 5;
+    private final int FIFTEEN_LOADER = 6;
+    private final int SIXTEEN_LOADER = 7;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overview);
+
+        getLoaderManager().initLoader(EIGHT_THIRTY_LOADER, null, this);
+        getLoaderManager().initLoader(NINE_LOADER, null, this);
+        getLoaderManager().initLoader(TEN_LOADER, null, this);
+        getLoaderManager().initLoader(ELEVEN_LOADER, null, this);
+        getLoaderManager().initLoader(THIRTEEN_LOADER, null, this);
+        getLoaderManager().initLoader(FOURTEEN_LOADER, null, this);
+        getLoaderManager().initLoader(FIFTEEN_LOADER, null, this);
+        getLoaderManager().initLoader(SIXTEEN_LOADER, null, this);
 
         helper = new OfferPlannerDbHelper(this);
         db = helper.getReadableDatabase();
@@ -59,49 +82,49 @@ public class MainActivity extends AppCompatActivity implements OnOfferCardClickL
         offersAtEightThirty.setHasFixedSize(true);
         offersAtEightThirty.setLayoutManager(this.createHorizontalLayoutManager());
         eightThirtyCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_EIGHT_THIRTY);
-        offersAtEightThirty.setAdapter(offersAtEightThirtyAdapter = new OfferSummaryCursorAdapter(this, this, eightThirtyCursor));
+        offersAtEightThirty.setAdapter(offersAtEightThirtyAdapter = new OfferSummaryCursorAdapter(this, this));
 
         offersAtNine = (RecyclerView) findViewById(R.id.offers_at_nine_recycler);
         offersAtNine.setHasFixedSize(true);
         offersAtNine.setLayoutManager(this.createHorizontalLayoutManager());
         nineCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_NINE);
-        offersAtNine.setAdapter(offersAtNineAdapter = new OfferSummaryCursorAdapter(this, this, nineCursor));
+        offersAtNine.setAdapter(offersAtNineAdapter = new OfferSummaryCursorAdapter(this, this));
 
         offersAtTen = (RecyclerView) findViewById(R.id.offers_at_ten_recycler);
         offersAtTen.setHasFixedSize(true);
         offersAtTen.setLayoutManager(this.createHorizontalLayoutManager());
         tenCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_TEN);
-        offersAtTen.setAdapter(offersAtTenAdapter = new OfferSummaryCursorAdapter(this, this, tenCursor));
+        offersAtTen.setAdapter(offersAtTenAdapter = new OfferSummaryCursorAdapter(this, this));
 
         offersAtEleven = (RecyclerView) findViewById(R.id.offers_at_eleven_recycler);
         offersAtEleven.setHasFixedSize(true);
         offersAtEleven.setLayoutManager(this.createHorizontalLayoutManager());
         elevenCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_ELEVEN);
-        offersAtEleven.setAdapter(offersAtElevenAdaper = new OfferSummaryCursorAdapter(this, this, elevenCursor));
+        offersAtEleven.setAdapter(offersAtElevenAdaper = new OfferSummaryCursorAdapter(this, this));
 
         offersAtThirteen = (RecyclerView) findViewById(R.id.offers_at_thirteen_recycler);
         offersAtThirteen.setHasFixedSize(true);
         offersAtThirteen.setLayoutManager(this.createHorizontalLayoutManager());
         thirteenCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_THIRTEEN);
-        offersAtThirteen.setAdapter(offersAtThirteenAdapter = new OfferSummaryCursorAdapter(this, this, thirteenCursor));
+        offersAtThirteen.setAdapter(offersAtThirteenAdapter = new OfferSummaryCursorAdapter(this, this));
 
         offersAtFourteen = (RecyclerView) findViewById(R.id.offers_at_fourteen_recycler);
         offersAtFourteen.setHasFixedSize(true);
         offersAtFourteen.setLayoutManager(this.createHorizontalLayoutManager());
         fourteenCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_FOURTEEN);
-        offersAtFourteen.setAdapter(offersAtFourteenAdapter = new OfferSummaryCursorAdapter(this, this, fourteenCursor));
+        offersAtFourteen.setAdapter(offersAtFourteenAdapter = new OfferSummaryCursorAdapter(this, this));
 
         offersAtFifteen = (RecyclerView) findViewById(R.id.offers_at_fifteen_recycler);
         offersAtFifteen.setHasFixedSize(true);
         offersAtFifteen.setLayoutManager(this.createHorizontalLayoutManager());
         fifteenCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_FIFTEEN);
-        offersAtFifteen.setAdapter(offersAtFifteenAdapter = new OfferSummaryCursorAdapter(this, this, fifteenCursor));
+        offersAtFifteen.setAdapter(offersAtFifteenAdapter = new OfferSummaryCursorAdapter(this, this));
 
         offersAtSixteen = (RecyclerView) findViewById(R.id.offers_at_sixteen_recycler);
         offersAtSixteen.setHasFixedSize(true);
         sixteenCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_SIXTEEN);
         offersAtSixteen.setLayoutManager(this.createHorizontalLayoutManager());
-        offersAtSixteen.setAdapter(offersAtSixteenAdapter = new OfferSummaryCursorAdapter(this, this, sixteenCursor));
+        offersAtSixteen.setAdapter(offersAtSixteenAdapter = new OfferSummaryCursorAdapter(this, this));
     }
 
     private RecyclerView.LayoutManager createHorizontalLayoutManager() {
@@ -109,9 +132,9 @@ public class MainActivity extends AppCompatActivity implements OnOfferCardClickL
     }
 
     @Override
-    public void onClickOfferCard(Offer offer) {
+    public void onClickOfferCard(int offerId) {
         Intent intent = new Intent(this, OfferDetailActivity.class);
-        intent.putExtra(Offer.KEY, offer);
+        intent.putExtra(Offer.ID_KEY, offerId);
         startActivity(intent);
     }
 
@@ -130,5 +153,74 @@ public class MainActivity extends AppCompatActivity implements OnOfferCardClickL
 
         helper.close();
         db.close();
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderIndex, Bundle bundle) {
+        String selection = OfferPlannerContract.OfferEntry.COLUMN_NAME_TIME + " = ?";
+
+        switch (loaderIndex) {
+            case EIGHT_THIRTY_LOADER:
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_EIGHT_THIRTY}, null);
+            case NINE_LOADER:
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_NINE}, null);
+            case TEN_LOADER:
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_TEN}, null);
+            case ELEVEN_LOADER:
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_ELEVEN}, null);
+            case THIRTEEN_LOADER:
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_THIRTEEN}, null);
+            case FOURTEEN_LOADER:
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_FOURTEEN}, null);
+            case FIFTEEN_LOADER:
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_FIFTEEN}, null);
+            case SIXTEEN_LOADER:
+                return new CursorLoader(this, Uri.parse(OfferPlannerContentProvider.OFFERS_URI), null, selection, new String[]{DatabaseReader.TIME_SIXTEEN}, null);
+        }
+
+        throw new IllegalArgumentException("Unsupported index");
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        switch (loader.getId()) {
+            case EIGHT_THIRTY_LOADER:
+                offersAtEightThirtyAdapter.setCursor(cursor);
+                offersAtEightThirtyAdapter.notifyDataSetChanged();
+                break;
+            case NINE_LOADER:
+                offersAtNineAdapter.setCursor(cursor);
+                offersAtNineAdapter.notifyDataSetChanged();
+                break;
+            case TEN_LOADER:
+                offersAtTenAdapter.setCursor(cursor);
+                offersAtTenAdapter.notifyDataSetChanged();
+                break;
+            case ELEVEN_LOADER:
+                offersAtElevenAdaper.setCursor(cursor);
+                offersAtElevenAdaper.notifyDataSetChanged();
+                break;
+            case THIRTEEN_LOADER:
+                offersAtThirteenAdapter.setCursor(cursor);
+                offersAtThirteenAdapter.notifyDataSetChanged();
+                break;
+            case FOURTEEN_LOADER:
+                offersAtFourteenAdapter.setCursor(cursor);
+                offersAtFourteenAdapter.notifyDataSetChanged();
+                break;
+            case FIFTEEN_LOADER:
+                offersAtFifteenAdapter.setCursor(cursor);
+                offersAtFifteenAdapter.notifyDataSetChanged();
+                break;
+            case SIXTEEN_LOADER:
+                offersAtSixteenAdapter.setCursor(cursor);
+                offersAtSixteenAdapter.notifyDataSetChanged();
+                break;
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }

@@ -28,9 +28,12 @@ public class OfferSummaryCursorAdapter extends RecyclerView.Adapter {
 
     private Cursor cursor;
 
-    public OfferSummaryCursorAdapter(Context context, OnOfferCardClickListener onOfferCardClickListener, Cursor cursor) {
+    public OfferSummaryCursorAdapter(Context context, OnOfferCardClickListener onOfferCardClickListener) {
         this.onOfferCardClickListener = onOfferCardClickListener;
         this.context = context;
+    }
+
+    public void setCursor(Cursor cursor) {
         this.cursor = cursor;
     }
 
@@ -42,6 +45,7 @@ public class OfferSummaryCursorAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         cursor.moveToPosition(position);
+        final int id = cursor.getInt(cursor.getColumnIndex(OfferPlannerContract.OfferEntry._ID));
         String title = cursor.getString(cursor.getColumnIndex(OfferPlannerContract.OfferEntry.COLUMN_NAME_TITLE));
         String category = cursor.getString(cursor.getColumnIndex(OfferPlannerContract.OfferEntry.COLUMN_NAME_CATEGORY));
         String room = cursor.getString(cursor.getColumnIndex(OfferPlannerContract.OfferEntry.COLUMN_NAME_ROOM));
@@ -58,13 +62,16 @@ public class OfferSummaryCursorAdapter extends RecyclerView.Adapter {
         offerHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onOfferCardClickListener.onClickOfferCard(offer);
+                onOfferCardClickListener.onClickOfferCard(id);
             }
         });
     }
 
     @Override
     public int getItemCount() {
+        if (cursor == null)
+            return 0;
+
         return cursor.getCount();
     }
 
