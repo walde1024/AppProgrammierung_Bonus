@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -84,6 +86,16 @@ public class OfferDetailActivity extends AppCompatActivity implements LoaderMana
                 getLoaderManager().restartLoader(FAVORITE_OFFER_LOADER, null, OfferDetailActivity.this);
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+        if (r.isPlaying()) {
+            r.stop();
+        }
     }
 
     @Override

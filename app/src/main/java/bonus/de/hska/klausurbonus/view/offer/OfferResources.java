@@ -60,4 +60,29 @@ public class OfferResources {
 
         return context.getResources().getDrawable(R.drawable.german_workshop, null);
     }
+
+    public static int getIconIdForOffer(Context context, Offer offer) {
+        if (offer.getCategory().equals("Denken"))
+            return R.drawable.math;
+
+        if (offer.getCategory().equals("Handwerk/Kunst"))
+            return R.drawable.german_elementary;
+
+        if (offer.getCategory().equals("Musik"))
+            return R.drawable.german_workshop;
+
+        if (offer.getCategory().equals("Sozialwissenschaften"))
+            return R.drawable.german_workshop;
+
+        if (offer.getCategory().equals("Sport/Tanz"))
+            return R.drawable.german_elementary;
+
+        if (offer.getCategory().equals("Deutsch und Fremdsprachen"))
+            return R.drawable.read_write_calc;
+
+        if (offer.getCategory().equals("Wissenschaften"))
+            return R.drawable.read_write_calc;
+
+        return R.drawable.german_workshop;
+    }
 }
