@@ -1,4 +1,4 @@
-package bonus.de.hska.klausurbonus.view.persistence.contentprovider;
+package bonus.de.hska.klausurbonus.persistence.contentprovider;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -8,8 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
-import bonus.de.hska.klausurbonus.view.persistence.contract.OfferPlannerContract;
-import bonus.de.hska.klausurbonus.view.persistence.db.OfferPlannerDbHelper;
+import bonus.de.hska.klausurbonus.persistence.contract.OfferPlannerContract;
+import bonus.de.hska.klausurbonus.persistence.db.OfferPlannerDbHelper;
 
 /**
  * Created by Walde on 27.12.16.

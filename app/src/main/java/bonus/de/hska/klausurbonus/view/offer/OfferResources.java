@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import bonus.de.hska.klausurbonus.R;
-import bonus.de.hska.klausurbonus.model.domain.Offer;
+import bonus.de.hska.klausurbonus.domain.model.Offer;
 
 /**
  * Created by Walde on 26.12.16.

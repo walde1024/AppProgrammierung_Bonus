@@ -12,12 +12,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import bonus.de.hska.klausurbonus.model.domain.Offer;
+import bonus.de.hska.klausurbonus.domain.model.Offer;
 import bonus.de.hska.klausurbonus.view.offer.OnOfferCardClickListener;
-import bonus.de.hska.klausurbonus.view.persistence.DatabaseReader;
-import bonus.de.hska.klausurbonus.view.persistence.contract.OfferPlannerContract;
-import bonus.de.hska.klausurbonus.view.persistence.contentprovider.OfferPlannerContentProvider;
-import bonus.de.hska.klausurbonus.view.persistence.db.OfferPlannerDbHelper;
+import bonus.de.hska.klausurbonus.persistence.DatabaseReader;
+import bonus.de.hska.klausurbonus.persistence.contract.OfferPlannerContract;
+import bonus.de.hska.klausurbonus.persistence.contentprovider.OfferPlannerContentProvider;
+import bonus.de.hska.klausurbonus.persistence.db.OfferPlannerDbHelper;
 
 public class MainActivity extends AppCompatActivity implements OnOfferCardClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 

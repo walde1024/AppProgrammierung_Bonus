@@ -10,12 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
-import bonus.de.hska.klausurbonus.model.domain.Offer;
+import bonus.de.hska.klausurbonus.domain.model.Offer;
 import bonus.de.hska.klausurbonus.view.offer.OfferResources;
 import bonus.de.hska.klausurbonus.view.offer.OnOfferCardClickListener;
-import bonus.de.hska.klausurbonus.view.persistence.contract.OfferPlannerContract;
+import bonus.de.hska.klausurbonus.persistence.contract.OfferPlannerContract;
 
 /**
  * Created by Walde on 26.11.16.

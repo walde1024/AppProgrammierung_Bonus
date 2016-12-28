@@ -20,8 +20,9 @@
 
         </activity>
 
+        <service android:name=".service.OfferReminderService"/>
 
-        <provider android:name=".view.persistence.contentprovider.OfferPlannerContentProvider"
+        <provider android:name=".persistence.contentprovider.OfferPlannerContentProvider"
             android:authorities="bonus.de.hska.klausurbonus.provider"/>
     </application>
 
