@@ -1,10 +1,7 @@
-package bonus.de.hska.klausurbonus.model.domain;
+package bonus.de.hska.klausurbonus.domain.model;
 
-import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import java.io.Serializable;
 
 /**
  * Created by Walde on 26.11.16.

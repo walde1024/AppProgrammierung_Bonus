@@ -1,11 +1,11 @@
-package bonus.de.hska.klausurbonus.view.persistence.db;
+package bonus.de.hska.klausurbonus.persistence.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import bonus.de.hska.klausurbonus.view.persistence.SampleDataProvider;
-import bonus.de.hska.klausurbonus.view.persistence.contract.OfferPlannerContract;
+import bonus.de.hska.klausurbonus.persistence.SampleDataProvider;
+import bonus.de.hska.klausurbonus.persistence.contract.OfferPlannerContract;
 
 /**
  * Created by Walde on 27.12.16.

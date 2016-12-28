@@ -1,4 +1,4 @@
-package bonus.de.hska.klausurbonus.view.persistence.contract;
+package bonus.de.hska.klausurbonus.persistence.contract;
 
 import android.provider.BaseColumns;
 

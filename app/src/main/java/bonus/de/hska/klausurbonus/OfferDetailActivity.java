@@ -1,9 +1,13 @@
 package bonus.de.hska.klausurbonus;
 
+import android.app.AlarmManager;
 import android.app.LoaderManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -14,16 +18,18 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import bonus.de.hska.klausurbonus.model.domain.Offer;
+import java.util.Calendar;
+
+import bonus.de.hska.klausurbonus.domain.model.Offer;
+import bonus.de.hska.klausurbonus.service.OfferReminderService;
 import bonus.de.hska.klausurbonus.view.offer.OfferResources;
-import bonus.de.hska.klausurbonus.view.persistence.contract.OfferPlannerContract;
-import bonus.de.hska.klausurbonus.view.persistence.contentprovider.OfferPlannerContentProvider;
+import bonus.de.hska.klausurbonus.persistence.contract.OfferPlannerContract;
+import bonus.de.hska.klausurbonus.persistence.contentprovider.OfferPlannerContentProvider;
 
 public class OfferDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -63,7 +69,7 @@ public class OfferDetailActivity extends AppCompatActivity implements LoaderMana
         iconFrame = (FrameLayout) findViewById(R.id.offer_detail_icon_frame);
 
         offerId = getIntent().getExtras().getInt(Offer.ID_KEY);
-
+        getLoaderManager().initLoader(OFFER_LOADER, null, this);
         Handler handler = new Handler(Looper.myLooper());
 
         getContentResolver().registerContentObserver(Uri.parse(OfferPlannerContentProvider.FAVORITE_OFFERS_URI), true, favoriteContentObserver = new ContentObserver(handler) {
@@ -81,11 +87,25 @@ public class OfferDetailActivity extends AppCompatActivity implements LoaderMana
     }
 
     @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.offer_detail, menu);
         this.menu = menu;
 
-        getLoaderManager().initLoader(OFFER_LOADER, null, this);
+        MenuItem item = null;
+        item = menu.findItem(R.id.action_favorite);
+
+        if (isFavorite) {
+            item.setIcon(getDrawable(R.drawable.ic_favorite_marked));
+        }
+        else {
+            item.setIcon(getDrawable(R.drawable.ic_favorite));
+        }
+
 
         return true;
     }
@@ -97,6 +117,7 @@ public class OfferDetailActivity extends AppCompatActivity implements LoaderMana
 
                 if (!thereIsOtherFavorite) {
                     setCurrentOfferAsFavorite();
+                    setReminder();
                 }
                 else {
                     showReplaceFavoriteConfirmDialog();
@@ -104,6 +125,7 @@ public class OfferDetailActivity extends AppCompatActivity implements LoaderMana
             }
             else {
                 getContentResolver().delete(Uri.parse(OfferPlannerContentProvider.FAVORITE_OFFERS_URI), OfferPlannerContract.FavoriteOffer.COLUMN_NAME_TIME + " = ?", new String[] {offer.getTime()});
+                removeReminder();
             }
         }
 
@@ -130,6 +152,39 @@ public class OfferDetailActivity extends AppCompatActivity implements LoaderMana
         values.put(OfferPlannerContract.FavoriteOffer.COLUMN_NAME_OFFER_ID, offerId);
 
         getContentResolver().insert(Uri.parse(OfferPlannerContentProvider.FAVORITE_OFFERS_URI), values);
+
+        setReminder();
+    }
+
+    private void setReminder() {
+        String time = offer.getTime();
+        String[] timeSplitted = time.split(":");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSplitted[0]));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(timeSplitted[1]));
+        calendar.set(Calendar.SECOND, 0);
+        calendar.add(Calendar.MINUTE, -5);
+
+        //calendar = Calendar.getInstance();
+        //calendar.add(Calendar.SECOND, 10);
+
+        Intent reminderServiceIntent = new Intent(this, OfferReminderService.class);
+        reminderServiceIntent.putExtra(Offer.ID_KEY, offerId);
+
+        reminderServiceIntent.setData(Uri.parse(offer.getTime()));
+        PendingIntent pi = PendingIntent.getService(this, 0, reminderServiceIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
+    }
+
+    private void removeReminder() {
+        Intent reminderServiceIntent = new Intent(this, OfferReminderService.class);
+        reminderServiceIntent.setData(Uri.parse(offer.getTime()));
+        PendingIntent pi = PendingIntent.getService(this, 0, reminderServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+
+        am.cancel(pi);
     }
 
     @Override
@@ -163,25 +218,35 @@ public class OfferDetailActivity extends AppCompatActivity implements LoaderMana
                 break;
 
             case FAVORITE_OFFER_LOADER:
-                MenuItem item = menu.findItem(R.id.action_favorite);
+                MenuItem item = null;
+                if (menu != null) {
+                    item = menu.findItem(R.id.action_favorite);
+                }
+
                 if (cursor.getCount() > 0) {
                     cursor.moveToFirst();
                     int id = cursor.getInt(cursor.getColumnIndex(OfferPlannerContract.FavoriteOffer.COLUMN_NAME_OFFER_ID));
                     if (id == offerId) {
                         isFavorite = true;
                         thereIsOtherFavorite = false;
-                        item.setIcon(getDrawable(R.drawable.ic_favorite_marked));
+
+                        if (item != null)
+                            item.setIcon(getDrawable(R.drawable.ic_favorite_marked));
                     }
                     else {
                         thereIsOtherFavorite = true;
                         isFavorite = false;
-                        item.setIcon(getDrawable(R.drawable.ic_favorite));
+
+                        if (item != null)
+                            item.setIcon(getDrawable(R.drawable.ic_favorite));
                     }
                 }
                 else {
                     isFavorite = false;
                     thereIsOtherFavorite = false;
-                    item.setIcon(getDrawable(R.drawable.ic_favorite));
+
+                    if (item != null)
+                        item.setIcon(getDrawable(R.drawable.ic_favorite));
                 }
                 break;
         }

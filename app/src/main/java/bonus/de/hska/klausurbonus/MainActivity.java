@@ -12,12 +12,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import bonus.de.hska.klausurbonus.model.domain.Offer;
+import bonus.de.hska.klausurbonus.domain.model.Offer;
 import bonus.de.hska.klausurbonus.view.offer.OnOfferCardClickListener;
-import bonus.de.hska.klausurbonus.view.persistence.DatabaseReader;
-import bonus.de.hska.klausurbonus.view.persistence.contract.OfferPlannerContract;
-import bonus.de.hska.klausurbonus.view.persistence.contentprovider.OfferPlannerContentProvider;
-import bonus.de.hska.klausurbonus.view.persistence.db.OfferPlannerDbHelper;
+import bonus.de.hska.klausurbonus.persistence.DatabaseReader;
+import bonus.de.hska.klausurbonus.persistence.contract.OfferPlannerContract;
+import bonus.de.hska.klausurbonus.persistence.contentprovider.OfferPlannerContentProvider;
+import bonus.de.hska.klausurbonus.persistence.db.OfferPlannerDbHelper;
 
 public class MainActivity extends AppCompatActivity implements OnOfferCardClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -115,19 +115,21 @@ public class MainActivity extends AppCompatActivity implements OnOfferCardClickL
         sixteenCursor = DatabaseReader.getOffers(db, DatabaseReader.TIME_SIXTEEN);
         offersAtSixteen.setLayoutManager(this.createHorizontalLayoutManager());
         offersAtSixteen.setAdapter(offersAtSixteenAdapter = new OfferSummaryCursorAdapter(this, this));
+
+        getLoaderManager().initLoader(EIGHT_THIRTY_LOADER, null, this);
+        getLoaderManager().initLoader(NINE_LOADER, null, this);
+        getLoaderManager().initLoader(TEN_LOADER, null, this);
+        getLoaderManager().initLoader(ELEVEN_LOADER, null, this);
+        getLoaderManager().initLoader(THIRTEEN_LOADER, null, this);
+        getLoaderManager().initLoader(FOURTEEN_LOADER, null, this);
+        getLoaderManager().initLoader(FIFTEEN_LOADER, null, this);
+        getLoaderManager().initLoader(SIXTEEN_LOADER, null, this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        getLoaderManager().restartLoader(EIGHT_THIRTY_LOADER, null, this);
-        getLoaderManager().restartLoader(NINE_LOADER, null, this);
-        getLoaderManager().restartLoader(TEN_LOADER, null, this);
-        getLoaderManager().restartLoader(ELEVEN_LOADER, null, this);
-        getLoaderManager().restartLoader(THIRTEEN_LOADER, null, this);
-        getLoaderManager().restartLoader(FOURTEEN_LOADER, null, this);
-        getLoaderManager().restartLoader(FIFTEEN_LOADER, null, this);
-        getLoaderManager().restartLoader(SIXTEEN_LOADER, null, this);
+
     }
 
     private RecyclerView.LayoutManager createHorizontalLayoutManager() {
